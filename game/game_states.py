@@ -12,6 +12,7 @@ class GameState:
                  game_finished: bool = False,
                  game_log=None):
         self.turn_nb = turn_nb
+        self.players = {}
         self.active_player = active_player
         self.game_finished = game_finished
         self.game_log = game_log

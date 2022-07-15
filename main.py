@@ -1,16 +1,29 @@
-# This is a sample Python script.
-
-# Press Umschalt+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+import game.game_states as game_states
+import game.base_classes as base_classes
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Strg+F8 to toggle the breakpoint.
+def setup_game():
+    probs = base_classes.RummiCubProperties(nb_players=4, nb_stones_begin=14)
+    game_state = game_states.GameState()
+
+    # create all players
+    for player in range(probs.nb_players):
+        new_player = base_classes.Player(
+                 name=f'player_{player}',
+                 unique_id=player,
+                 player_type='ai',
+                 turn_active=False,
+                 stones=None,
+                 got_30_out=False)
+
+        # enter players in gamestate register
+        game_state.players[new_player.full_unique_id] = new_player
+
+    # create bagofstones and fill with stones
+    bagofstones = base_classes.BagOfStones(pieces_per_colour=2, nb_jokers=2)
+    bagofstones.fill_bag()
 
 
-# Press the green button in the gutter to run the script.
+
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    setup_game()
