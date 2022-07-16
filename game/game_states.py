@@ -20,6 +20,7 @@ class GameState:
         if isinstance(game_log, dict):
             self.game_log = game_log
         else:
+            self.game_log = {}
             self.game_log["turn"] = {}
 
 

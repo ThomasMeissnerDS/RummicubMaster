@@ -112,6 +112,7 @@ class BagOfStones:
         :param nb_to_draw: Number of stones to draw from the bag.
         :return: Full unique id of the stone.
         """
-        stones = np.random.choice(self.stones_left, size=nb_to_draw)
-        self.stones_left.remove(stones)
+        stones = np.random.choice(self.stones_left, size=nb_to_draw, replace=False)
+        for stone in stones:
+            self.stones_left.remove(stone)
         return stones

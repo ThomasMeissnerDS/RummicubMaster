@@ -23,6 +23,10 @@ def setup_game():
     bagofstones = base_classes.BagOfStones(pieces_per_colour=2, nb_jokers=2)
     bagofstones.fill_bag()
 
+    # every player draws starting stones from the bag
+    for player_id, player_obj in game_state.players.items():
+        stones_drawn = bagofstones.draw_stone(probs.nb_stones_begin)
+        player_obj.stones = stones_drawn
 
 
 if __name__ == '__main__':
