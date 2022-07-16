@@ -115,4 +115,4 @@ class BagOfStones:
         stones = np.random.choice(self.stones_left, size=nb_to_draw, replace=False)
         for stone in stones:
             self.stones_left.remove(stone)
-        return stones
+        return stones[0]  # return only the element not a numpy array
