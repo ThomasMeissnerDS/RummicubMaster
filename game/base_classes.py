@@ -43,36 +43,79 @@ class Player:
             self.stones = []
         self.stones_by_colour = {}
         self.stones_by_number = {}
+        self.stones_value_by_colour = {}
+        self.stones_value_by_number = {}
         self.got_30_out = got_30_out
 
-    def sort_stones_by_colour(self):
+    def sort_stones_by_colour(self, all_colours=True, chosen_colour=None):
         """
         Takes all stones on players board and organizes them into
         lists of same colour.
+        :param all_colours: If True, execute sorting for all colours.
+        :param chosen_colour: Only applicable if all_colours is False.
+        Expects one of ["red", "blue", "orange", "black"] as a string.
         :return: Updates class instance.
         """
-        self.stones_by_colour["red"] = [s.split("-")[0] for s in self.stones if "red" in s]
-        self.stones_by_colour["red"].sort()
-        self.stones_by_colour["blue"] = [s.split("-")[0] for s in self.stones if "blue" in s]
-        self.stones_by_colour["blue"].sort()
-        self.stones_by_colour["orange"] = [s.split("-")[0] for s in self.stones if "orange" in s]
-        self.stones_by_colour["orange"].sort()
-        self.stones_by_colour["black"] = [s.split("-")[0] for s in self.stones if "black" in s]
-        self.stones_by_colour["black"].sort()
+        if all_colours:
+            colours = ["red", "blue", "orange", "black"]
+        else:
+            colours = [chosen_colour]
+        for colour in colours:
+            self.stones_by_colour[colour] = [s.split("-")[0] for s in self.stones if colour in s]
+            self.stones_by_colour[colour].sort()
 
-    def sort_stones_by_number(self):
+    def sort_stones_by_number(self, all_numbers=True, chosen_number=None):
         """
         Takes all stones on players board and organizes them into
         lists of same number.
+        :param all_numbers: If True, execute sorting for all numbers.
+        :param chosen_number: Only applicable if all_numbers is False.
+        Expects one of range(1,14) as an integer.
         :return: Updates class instance.
         """
-        for num in range(1, 14):
+        if all_numbers:
+            numbers = [n for n in range(1, 14)]
+        else:
+            numbers = [chosen_number]
+        for num in numbers:
             if len(str(num)) < 2:
                 num = "0" + str(num)
             self.stones_by_number[num] = [s.split("-")[0] for s in self.stones if f"{num}" in s]
-            self.stones_by_number[num].sort(
+            self.stones_by_number[num].sort()
 
-            )
+    def value_stones_by_colour(self, all_colours=True, chosen_colour=None):
+        """
+        Takes all stones on players board and calculates the value of them by colour.
+        :param all_colours: If True, execute sorting for all colours.
+        :param chosen_colour: Only applicable if all_colours is False.
+        Expects one of ["red", "blue", "orange", "black"] as a string.
+        :return: Updates class instance.
+        """
+        if all_colours:
+            colours = ["red", "blue", "orange", "black"]
+        else:
+            colours = [chosen_colour]
+        for colour in colours:  # TODO: CALCULATE ACTUAL VALUES OF SERIES!!!!
+            unique_values = [int(s.split("_")[2].split("-")[0]) for s in set(self.stones) if colour in s]
+            self.stones_value_by_colour[colour] = np.sum(np.asarray(unique_values))
+
+    def value_stones_by_number(self, all_numbers=True, chosen_number=None):
+        """
+        Takes all stones on players board and and calculates the value of them by number.
+        :param all_numbers: If True, execute sorting for all numbers.
+        :param chosen_number: Only applicable if all_numbers is False.
+        Expects one of range(1,14) as an integer.
+        :return: Updates class instance.
+        """
+        if all_numbers:
+            numbers = [n for n in range(1, 14)]
+        else:
+            numbers = [chosen_number]
+        for num in numbers:
+            if len(str(num)) < 2:
+                num = "0" + str(num)
+            unique_values = [int(s.split("_")[2].split("-")[0]) for s in set(self.stones) if f"{num}" in s]
+            self.stones_value_by_number[num] = np.sum(np.asarray(unique_values))
 
 
 class Stone:
