@@ -1,5 +1,6 @@
 import game.game_states as game_states
 import game.base_classes as base_classes
+import game.player_actions as player_actions
 import operator
 
 
@@ -31,7 +32,7 @@ def setup_game():
     for player_id, player_obj in game_state.players.items():
         for piece in range(probs.nb_stones_begin):
             stone_drawn = bagofstones.draw_stone(1)
-            player_obj.stones = stone_drawn
+            player_obj.stones.append(stone_drawn)
             # overwrite current position of stone
             stone_obj = bagofstones.stones_objects[stone_drawn]
             stone_obj.current_position = player_id
@@ -42,6 +43,7 @@ def setup_game():
 
 def play_game():
     game_state, bagofstones, probs = setup_game()
+    # TODO: ADD CHECK IF GAME HAS FINISHED ALREADY FOR WHILE LOOP
     game_state.turn_nb += 1
     curr_turn = game_states.Turn(current_turn=game_state.turn_nb)
     # get turn order
@@ -51,6 +53,15 @@ def play_game():
         curr_turn.board_state_begin[player] = game_states.BoardState
         curr_turn.player_state_begin[player] = (game_state.players[player]).full_unique_id
         curr_turn.bagofstone_state_begin[player] = bagofstones.stones_left
+
+        # actual execution of the turn
+        player_actions.sort_stones(play_obj=game_state.players[player])
+
+
+        # store all states at end of the turn
+        curr_turn.board_state_end[player] = game_states.BoardState
+        curr_turn.player_state_end[player] = (game_state.players[player]).full_unique_id
+        curr_turn.bagofstone_state_end[player] = bagofstones.stones_left
 
 
 if __name__ == '__main__':

@@ -55,11 +55,11 @@ class BoardState:
                  pieces_per_colour: int = 2):
         self.nb_formations = nb_formations
         self.pieces_per_colour = pieces_per_colour
-        self.board_matrices = {"red": None,
-                               "blue": None,
-                               "orange": None,
-                               "black": None,
-                               "mixed": None}
+        self.board_matrices = {"red": [],
+                               "blue": [],
+                               "orange": [],
+                               "black": [],
+                               "mixed": []}
 
 
 class Turn:

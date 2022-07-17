@@ -37,8 +37,40 @@ class Player:
         self.full_unique_id = f"player_{unique_id}"
         self.player_type = player_type
         self.turn_active = turn_active
-        self.stones = stones  # expects a list
+        if isinstance(stones, list):
+            self.stones = stones  # expects a list
+        else:
+            self.stones = []
+        self.stones_by_colour = {}
+        self.stones_by_number = {}
         self.got_30_out = got_30_out
+
+    def sort_stones_by_colour(self):
+        """
+        Takes all stones on players board and organizes them into
+        lists of same colour.
+        :return: Updates class instance.
+        """
+        self.stones_by_colour["red"] = [s for s in self.stones if "red" in s]
+        self.stones_by_colour["red"].sort()
+        self.stones_by_colour["blue"] = [s for s in self.stones if "blue" in s]
+        self.stones_by_colour["blue"].sort()
+        self.stones_by_colour["orange"] = [s for s in self.stones if "orange" in s]
+        self.stones_by_colour["orange"].sort()
+        self.stones_by_colour["black"] = [s for s in self.stones if "black" in s]
+        self.stones_by_colour["black"].sort()
+
+    def sort_stones_by_number(self):
+        """
+        Takes all stones on players board and organizes them into
+        lists of same number.
+        :return: Updates class instance.
+        """
+        for num in range(1, 14):
+            self.stones_by_number[num] = [s for s in self.stones if f"{num}" in s]
+            self.stones_by_number[num].sort(
+
+            )
 
 
 class Stone:
@@ -87,7 +119,7 @@ class BagOfStones:
         self.stones_left = []
         for i in range(self.pieces_per_colour):
             for col in ["red", "blue", "orange", "black"]:
-                for piece_no in range(13):
+                for piece_no in range(1, 14):
                     stone = Stone(unique_id=piece_no,
                                   colour=col,
                                   copy_of_colour=i,
