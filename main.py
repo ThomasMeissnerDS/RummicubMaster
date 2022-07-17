@@ -19,6 +19,9 @@ def setup_game():
         # enter players in gamestate register
         game_state.players[new_player.full_unique_id] = new_player
 
+    # define order of players each turn
+    game_state.define_order_players()
+
     # create bagofstones and fill with stones
     bagofstones = base_classes.BagOfStones(pieces_per_colour=2, nb_jokers=2)
     bagofstones.fill_bag()

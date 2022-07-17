@@ -1,3 +1,6 @@
+import numpy as np
+
+
 class GameState:
     """
     Class holding information about current game state.
@@ -13,6 +16,7 @@ class GameState:
                  game_log=None):
         self.turn_nb = turn_nb
         self.players = {}
+        self.order_of_players = {}
         self.active_player = active_player
         self.game_finished = game_finished
         self.game_log = game_log
@@ -22,6 +26,20 @@ class GameState:
         else:
             self.game_log = {}
             self.game_log["turn"] = {}
+
+    def define_order_players(self):
+        """
+        Randomly assigns order of players within each turn.
+        :return: Updates class attribute
+        """
+        player_list = []
+        for pl_id, pl_obj in self.players.items():
+            player_list.append(pl_id)
+
+        for order in range(len(player_list)):
+            player = np.random.choice(player_list, size=1, replace=False)
+            self.order_of_players[player[0]] = order
+            player_list.remove(player[0])
 
 
 class BoardState:
