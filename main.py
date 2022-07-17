@@ -1,5 +1,6 @@
 import game.game_states as game_states
 import game.base_classes as base_classes
+import operator
 
 
 def setup_game():
@@ -36,7 +37,21 @@ def setup_game():
             stone_obj.current_position = player_id
             bagofstones.stones_objects[stone_drawn] = stone_obj
 
+    return game_state, bagofstones, probs
+
+
+def play_game():
+    game_state, bagofstones, probs = setup_game()
+    game_state.turn_nb += 1
+    curr_turn = game_states.Turn(current_turn=game_state.turn_nb)
+    # get turn order
+    order_of_players = sorted(game_state.order_of_players.items(), key=operator.itemgetter(1))
+    for player, order in order_of_players:
+        # store all states at beginning of the turn
+        curr_turn.board_state_begin[player] = game_states.BoardState
+        curr_turn.player_state_begin[player] = (game_state.players[player]).full_unique_id
+        curr_turn.bagofstone_state_begin[player] = bagofstones.stones_left
 
 
 if __name__ == '__main__':
-    setup_game()
+    play_game()
