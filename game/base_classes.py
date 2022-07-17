@@ -51,13 +51,13 @@ class Player:
         lists of same colour.
         :return: Updates class instance.
         """
-        self.stones_by_colour["red"] = [s for s in self.stones if "red" in s]
+        self.stones_by_colour["red"] = [s.split("-")[0] for s in self.stones if "red" in s]
         self.stones_by_colour["red"].sort()
-        self.stones_by_colour["blue"] = [s for s in self.stones if "blue" in s]
+        self.stones_by_colour["blue"] = [s.split("-")[0] for s in self.stones if "blue" in s]
         self.stones_by_colour["blue"].sort()
-        self.stones_by_colour["orange"] = [s for s in self.stones if "orange" in s]
+        self.stones_by_colour["orange"] = [s.split("-")[0] for s in self.stones if "orange" in s]
         self.stones_by_colour["orange"].sort()
-        self.stones_by_colour["black"] = [s for s in self.stones if "black" in s]
+        self.stones_by_colour["black"] = [s.split("-")[0] for s in self.stones if "black" in s]
         self.stones_by_colour["black"].sort()
 
     def sort_stones_by_number(self):
@@ -67,7 +67,9 @@ class Player:
         :return: Updates class instance.
         """
         for num in range(1, 14):
-            self.stones_by_number[num] = [s for s in self.stones if f"{num}" in s]
+            if len(str(num)) < 2:
+                num = "0" + str(num)
+            self.stones_by_number[num] = [s.split("-")[0] for s in self.stones if f"{num}" in s]
             self.stones_by_number[num].sort(
 
             )
@@ -86,7 +88,7 @@ class Stone:
                  position: str = None):
         self.unique_id = unique_id
         self.short_unique_id = f"{colour}_{unique_id}"
-        self.full_unique_id = f"stone_{colour}_{copy_of_colour}_{unique_id}"
+        self.full_unique_id = f"stone_{colour}_{unique_id}-copy_{copy_of_colour}"
         self.colour = colour
         self.copy_of_colour = copy_of_colour
         self.is_joker = is_joker
@@ -120,6 +122,8 @@ class BagOfStones:
         for i in range(self.pieces_per_colour):
             for col in ["red", "blue", "orange", "black"]:
                 for piece_no in range(1, 14):
+                    if len(str(piece_no)) < 2:
+                        piece_no = "0" + str(piece_no)
                     stone = Stone(unique_id=piece_no,
                                   colour=col,
                                   copy_of_colour=i,

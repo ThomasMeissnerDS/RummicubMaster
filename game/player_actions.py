@@ -12,5 +12,6 @@ def sort_stones(play_obj: base_classes.Player = None):
     play_obj.sort_stones_by_colour()
     play_obj.sort_stones_by_number()
 
+
 def check_get_30_out(play_obj: base_classes.Player = None):
     pass
