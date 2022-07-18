@@ -24,5 +24,5 @@ def value_stones(play_obj: base_classes.Player = None):
     play_obj.value_stones_by_number()
 
 
-def get_value_of_stones_by_number_combinations(play_obj: base_classes.Player = None):
-    pass
+def value_stones_by_colour_series(play_obj: base_classes.Player = None):
+    play_obj.value_stones_by_colour_series()

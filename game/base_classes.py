@@ -7,6 +7,7 @@ class RummiCubProperties:
     :param nb_players: Number of players in the game.
     :param nb_stones_begin: Number of stones each player has to draw from the bag of stones.
     """
+
     def __init__(self,
                  nb_players: int = 4,
                  nb_stones_begin: int = 14):
@@ -25,6 +26,7 @@ class Player:
     :param got_30_out: Boolean flagging if the player already placed the first 30 points
     on the board.
     """
+
     def __init__(self,
                  name: str = 'Thomas',
                  unique_id: int = 0,
@@ -44,6 +46,12 @@ class Player:
         self.stones_by_colour = {}
         self.stones_by_number = {}
         self.stones_value_by_colour = {}
+        self.stones_value_permutations_stones = {}  # key=stones_value_permutations_id
+        self.stones_value_permutations_starting_stone = {}  # key=stones_value_permutations_id
+        self.stones_value_permutations_ending_stone = {}  # key=stones_value_permutations_id
+        self.stones_value_permutations_length = {}  # key=stones_value_permutations_id
+        self.stones_value_permutations_values = {}  # key=stones_value_permutations_id
+        self.stones_value_permutations_playable_as_series = {}  # key=stones_value_permutations_id
         self.stones_value_by_number = {}
         self.got_30_out = got_30_out
 
@@ -61,7 +69,8 @@ class Player:
         else:
             colours = [chosen_colour]
         for colour in colours:
-            self.stones_by_colour[colour] = [s.split("-")[0] for s in self.stones if colour in s]
+            self.stones_by_colour[colour] = [s.split("-")[0] for s in
+                                             set([stone.split("-")[0] for stone in self.stones]) if colour in s]
             self.stones_by_colour[colour].sort()
 
     def sort_stones_by_number(self, all_numbers=True, chosen_number=None):
@@ -80,7 +89,8 @@ class Player:
         for num in numbers:
             if len(str(num)) < 2:
                 num = "0" + str(num)
-            self.stones_by_number[num] = [s.split("-")[0] for s in self.stones if f"{num}" in s]
+            self.stones_by_number[num] = [s.split("-")[0] for s in set([stone.split("-")[0] for stone in self.stones])
+                                          if f"{num}" in s]
             self.stones_by_number[num].sort()
 
     def value_stones_by_colour(self, all_colours=True, chosen_colour=None):
@@ -95,8 +105,9 @@ class Player:
             colours = ["red", "blue", "orange", "black"]
         else:
             colours = [chosen_colour]
-        for colour in colours:  # TODO: CALCULATE ACTUAL VALUES OF SERIES!!!!
-            unique_values = [int(s.split("_")[2].split("-")[0]) for s in set(self.stones) if colour in s]
+        for colour in colours:
+            unique_values = [int(s.split("_")[2].split("-")[0]) for s in
+                             set([stone.split("-")[0] for stone in self.stones]) if colour in s]
             self.stones_value_by_colour[colour] = np.sum(np.asarray(unique_values))
 
     def value_stones_by_number(self, all_numbers=True, chosen_number=None):
@@ -114,8 +125,53 @@ class Player:
         for num in numbers:
             if len(str(num)) < 2:
                 num = "0" + str(num)
-            unique_values = [int(s.split("_")[2].split("-")[0]) for s in set(self.stones) if f"{num}" in s]
+            unique_values = [int(s.split("_")[2].split("-")[0]) for s in
+                             set([stone.split("-")[0] for stone in self.stones]) if f"{num}" in s]
+            # TODO: This ignores if someone has multiple copies of the same colour
             self.stones_value_by_number[num] = np.sum(np.asarray(unique_values))
+
+    def value_stones_by_colour_series(self, all_colours=True, chosen_colour=None):
+        """
+        Takes all stones on players board and calculates the value of them by colour, but actually
+        considers playable series rather than just all stones.
+        :param all_colours: If True, execute sorting for all colours.
+        :param chosen_colour: Only applicable if all_colours is False.
+        Expects one of ["red", "blue", "orange", "black"] as a string.
+        :return: Updates class instance.
+        """
+        if all_colours:
+            colours = ["red", "blue", "orange", "black"]
+        else:
+            colours = [chosen_colour]
+        for colour in colours:
+            # TODO: ADD sort for self.stones
+            unique_values = [int(s.split("_")[2]) for s in set([stone.split("-")[0] for stone in self.stones]) if
+                             colour in s]
+            unique_values_full_ids = [s for s in set(self.stones) if colour in s]
+            # loop through unique values in different slice sizes to get all playable permutations and values
+            full_len = len(unique_values)  # longest possible slice
+            start_idx = 0
+            for sizes in range(1, full_len + 1):
+                for its in range(full_len):
+                    end_idx = start_idx + sizes
+                    if end_idx > full_len - 1:
+                        break
+                    else:
+                        permuation_id = f"perm_{sizes}_{start_idx}_{end_idx}"
+                        self.stones_value_permutations_stones[permuation_id] = unique_values_full_ids[start_idx:end_idx]
+                        self.stones_value_permutations_starting_stone[permuation_id] = unique_values_full_ids[start_idx]
+                        self.stones_value_permutations_ending_stone[permuation_id] = unique_values_full_ids[end_idx]
+                        self.stones_value_permutations_length[permuation_id] = len(
+                            unique_values_full_ids[start_idx:end_idx])
+                        self.stones_value_permutations_values[permuation_id] = np.sum(
+                            np.asarray(unique_values[start_idx:end_idx]))
+
+                        if np.max(np.asarray(unique_values[start_idx:end_idx])) - np.min(
+                                np.asarray(unique_values[start_idx:end_idx])) == sizes - 1 and \
+                                self.stones_value_permutations_length[permuation_id] >= 3:
+                            self.stones_value_permutations_playable_as_series[permuation_id] = True
+                        else:
+                            self.stones_value_permutations_playable_as_series[permuation_id] = False
 
 
 class Stone:
@@ -123,6 +179,7 @@ class Stone:
     Base class for all stones. Holds properties including current position of each stone.
     :param unique_id: Integer which will be unique in combination with other properties.
     """
+
     def __init__(self,
                  unique_id: int = 0,
                  colour: str = None,
@@ -146,6 +203,7 @@ class BagOfStones:
     fill_bag method at first.
     Defaults as 2.
     """
+
     def __init__(self,
                  pieces_per_colour: int = 2,
                  nb_jokers: int = 2,

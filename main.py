@@ -57,6 +57,7 @@ def play_game():
         # actual execution of the turn
         player_actions.sort_stones(play_obj=game_state.players[player])
         player_actions.value_stones(play_obj=game_state.players[player])
+        player_actions.value_stones_by_colour_series(play_obj=game_state.players[player])
 
 
         # store all states at end of the turn
