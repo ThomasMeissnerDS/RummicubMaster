@@ -25,4 +25,12 @@ def value_stones(play_obj: base_classes.Player = None):
 
 
 def value_stones_by_colour_series(play_obj: base_classes.Player = None):
+    """
+    Function triggers evaluation of players' stones into multiple dictionaries wih permutation_id as key.
+    :param play_obj: Instance of Player object.
+    :return: Called functions updates class instance.
+    """
     play_obj.value_stones_by_colour_series()
+
+
+

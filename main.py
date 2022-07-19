@@ -55,9 +55,18 @@ def play_game():
         curr_turn.bagofstone_state_begin[player] = bagofstones.stones_left
 
         # actual execution of the turn
+        # sort and evaluate stones of the player
         player_actions.sort_stones(play_obj=game_state.players[player])
         player_actions.value_stones(play_obj=game_state.players[player])
         player_actions.value_stones_by_colour_series(play_obj=game_state.players[player])
+        # TODO: ADD FUNCTION WHICH CONSIDERS JOKERS. JOKERS DON'T HAVE A NUMBER AND NEED EXTRA CARE.
+
+        # get all possible actions and take actions as long as desired
+        # actions where stones are just placed on board are permutation ids
+        # TODO: Add function for getting 30 out actions and their permutations
+        # TODO: Add functions to interact with board (get all permutations of board + player board and check if any part is NOT playable)
+        # TODO: Add function to just draw (check permutations before and after)
+        # TODO: Add function to just clear player board (= win game)
 
 
         # store all states at end of the turn

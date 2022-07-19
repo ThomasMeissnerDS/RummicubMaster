@@ -157,21 +157,21 @@ class Player:
                     if end_idx > full_len - 1:
                         break
                     else:
-                        permuation_id = f"perm_{sizes}_{start_idx}_{end_idx}"
-                        self.stones_value_permutations_stones[permuation_id] = unique_values_full_ids[start_idx:end_idx]
-                        self.stones_value_permutations_starting_stone[permuation_id] = unique_values_full_ids[start_idx]
-                        self.stones_value_permutations_ending_stone[permuation_id] = unique_values_full_ids[end_idx]
-                        self.stones_value_permutations_length[permuation_id] = len(
+                        permutation_id = f"perm_{sizes}_{start_idx}_{end_idx}"
+                        self.stones_value_permutations_stones[permutation_id] = unique_values_full_ids[start_idx:end_idx]
+                        self.stones_value_permutations_starting_stone[permutation_id] = unique_values_full_ids[start_idx]
+                        self.stones_value_permutations_ending_stone[permutation_id] = unique_values_full_ids[end_idx]
+                        self.stones_value_permutations_length[permutation_id] = len(
                             unique_values_full_ids[start_idx:end_idx])
-                        self.stones_value_permutations_values[permuation_id] = np.sum(
+                        self.stones_value_permutations_values[permutation_id] = np.sum(
                             np.asarray(unique_values[start_idx:end_idx]))
 
                         if np.max(np.asarray(unique_values[start_idx:end_idx])) - np.min(
                                 np.asarray(unique_values[start_idx:end_idx])) == sizes - 1 and \
-                                self.stones_value_permutations_length[permuation_id] >= 3:
-                            self.stones_value_permutations_playable_as_series[permuation_id] = True
+                                self.stones_value_permutations_length[permutation_id] >= 3:
+                            self.stones_value_permutations_playable_as_series[permutation_id] = True
                         else:
-                            self.stones_value_permutations_playable_as_series[permuation_id] = False
+                            self.stones_value_permutations_playable_as_series[permutation_id] = False
 
 
 class Stone:
