@@ -13,6 +13,8 @@ class RummiCubProperties:
                  nb_stones_begin: int = 14):
         self.nb_players = nb_players
         self.nb_stones_begin = nb_stones_begin
+        self.colours = ["red", "blue", "orange", "black"]
+        self.encodings = {"red": 10, "blue": 20, "orange": 30, "black": 40, "joker": 50, "play": 80, "append": 90}
 
 
 class Player:
@@ -209,6 +211,7 @@ class BagOfStones:
                  nb_jokers: int = 2,
                  stones_left=None):
         self.stones_left = stones_left
+        self.stones_left_short_unique_id = {}
         self.pieces_per_colour = pieces_per_colour
         self.nb_jokers = nb_jokers
         self.full_unique_id = "bagofstones"
@@ -232,6 +235,7 @@ class BagOfStones:
                                   position="bagofstones")
                     self.stones_objects[stone.full_unique_id] = stone
                     self.stones_left.append(stone.full_unique_id)
+                    self.stones_left_short_unique_id[stone.full_unique_id] = stone.short_unique_id
 
         for i in range(self.nb_jokers):
             stone = Stone(unique_id=i,
@@ -241,6 +245,7 @@ class BagOfStones:
                           position="bagofstones")
             self.stones_objects[stone.full_unique_id] = stone
             self.stones_left.append(stone.full_unique_id)
+            self.stones_left_short_unique_id[stone.full_unique_id] = stone.short_unique_id
 
     def draw_stone(self, nb_to_draw: int = 1):
         """
@@ -253,3 +258,5 @@ class BagOfStones:
         for stone in stones:
             self.stones_left.remove(stone)
         return stones[0]  # return only the element not a numpy array
+
+
