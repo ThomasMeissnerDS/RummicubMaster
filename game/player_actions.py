@@ -61,8 +61,8 @@ def permutations_play_by_number(props: base_classes.RummiCubProperties = None):
     for number in range(1, 14):
         if number < 10:
             number = "0"+str(number)
-        temp_comb = []
         for part in colour_combinations:
+            temp_comb = []
             for colour in part:
                 temp_comb.append(str(colour)+"_"+str(number))
         colour_number_combinations.append(temp_comb)
